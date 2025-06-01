@@ -2,11 +2,12 @@ from pygame import *
 from random import randint
 
 font.init()
+mixer.init()
 
 window = display.set_mode((500, 700))
-display.set_caption("Гонки по прямой")
+display.set_caption('Гонки по прямой')
 background = transform.scale(image.load('track.png'), (500, 700))
-black_screen = Surface((500, 700))  # Создаем черную поверхность
+black_screen = Surface((500, 700))
 black_screen.fill((0, 0, 0))
 
 class GameSprite(sprite.Sprite):
@@ -50,8 +51,9 @@ class V_Car(GameSprite):
 clock = time.Clock()
 fps = 60
 
-vstrechka = sprite.Group()
+boom = mixer.Sound('boom.mp3')
 
+vstrechka = sprite.Group()
 
 car = Car(0, 'my_car.png', 250, 550)
 
@@ -83,28 +85,27 @@ while game_status:
             for car_obj in vstrechka:
                 car_obj.rect.y = randint(-300, 0)
             score = 0
+            boom.stop()
 
     if not game_over:
         car.update()
         vstrechka.update()
-        
-        if sprite.spritecollide(car, vstrechka, False):
-            game_over = True
-
-    if not game_over:
         car.reset()
         vstrechka.draw(window)
+        if sprite.spritecollide(car, vstrechka, False):
+            game_over = True
     
-    score_txt = score_font.render(f"Очки: {score}", True, (255, 255, 255))
+    score_txt = score_font.render('Очки:'+ str(score), True, (255, 255, 255))
     window.blit(score_txt, (20, 20))
     
     if game_over:
-        game_over_text = game_over_font.render("GAME OVER", True, (255, 0, 0))
-        restart_text = score_font.render("Нажмите R для рестарта", True, (255, 255, 255))
-        g_score_text = g_score_font.render("Ваши очки:" + str(score), True, (255, 255, 255))
+        game_over_text = game_over_font.render('GAME OVER', True, (255, 0, 0))
+        restart_text = score_font.render('Нажмите R для рестарта', True, (255, 255, 255))
+        g_score_text = g_score_font.render('Ваши очки:' + str(score), True, (255, 255, 255))
         window.blit(game_over_text, (100, 300))
         window.blit(restart_text, (100, 380))
         window.blit(g_score_text, (100, 460))
+        boom.play()
 
     display.update()
     clock.tick(fps)
