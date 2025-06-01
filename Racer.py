@@ -14,11 +14,12 @@ class GameSprite(sprite.Sprite):
     def __init__(self, player_speed, player_image, player_x, player_y):
         super().__init__()
         self.speed = player_speed
-        self.image = transform.scale(image.load(player_image), (105, 85))
+        self.image = transform.scale(image.load(player_image), (75, 90))
         self.rect = self.image.get_rect()
         self.rect.x = player_x
         self.rect.y = player_y
-
+        self.rect.inflate_ip(-20, -25)
+    
     def reset(self):
         window.blit(self.image, (self.rect.x, self.rect.y))
 
@@ -35,10 +36,11 @@ lost = 0
 class V_Car(GameSprite):
     def __init__(self, player_speed, player_image, player_x, player_y):
         super().__init__(player_speed, player_image, player_x, player_y)
-        self.image = transform.scale(image.load(player_image), (80, 90))
+        self.image = transform.scale(image.load(player_image), (70, 80))
         self.rect = self.image.get_rect()
         self.rect.x = player_x
         self.rect.y = player_y
+        self.rect.inflate_ip(-20, -25)
 
     def update(self):
         self.rect.y += self.speed
