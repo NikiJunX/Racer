@@ -7,8 +7,14 @@ mixer.init()
 window = display.set_mode((500, 700))
 display.set_caption('Гонки по прямой')
 background = transform.scale(image.load('track.png'), (500, 700))
+
 black_screen = Surface((500, 700))
 black_screen.fill((0, 0, 0))
+
+win = display.set_mode((800, 500))
+fon = transform.scale(image.load('fon.png'), (800, 500)) 
+but_play = transform.scale(image.load('but_play.png'),(820, 500))
+
 
 class GameSprite(sprite.Sprite):
     def __init__(self, player_speed, player_image, player_x, player_y):
@@ -53,6 +59,39 @@ class V_Car(GameSprite):
 clock = time.Clock()
 fps = 60
 
+but_x = 290
+but_y = 190
+but_w = 185
+but_h = 100
+
+game_status = True
+ 
+while game_status:
+    win.blit(fon, (0, 0))
+    win.blit(but_play, (0, 0))
+
+
+    for e in event.get():
+        if e.type == QUIT:
+            game_status = False
+
+        if e.type == MOUSEBUTTONDOWN:
+            if e.button == 1:
+                game_status = False
+                mouse_pos = mouse.get_pos()
+
+                if but_x <= mouse_pos[0] <= but_x + but_w and but_y <= mouse_pos[1] <= but_y + but_h:
+                    print('Хорошей игры!')
+
+    #draw.rect(window, (255,0,0), (but_x, but_y, but_w, but_h))
+
+
+    clock.tick(fps)
+
+    display.update()
+
+
+
 boom = mixer.Sound('boom.mp3')
 
 vstrechka = sprite.Group()
@@ -70,9 +109,9 @@ score_font = font.Font(None, 36)
 game_over_font = font.Font(None, 72)
 g_score_font = font.Font(None, 36)
 
-game_status = True
 game_over = False
-while game_status:
+
+while game_status == False:
     if game_over:
         window.blit(black_screen, (0, 0)) 
     else:
@@ -80,7 +119,7 @@ while game_status:
 
     for e in event.get():
         if e.type == QUIT:
-            game_status = False
+            game_status = True
         if game_over and e.type == KEYDOWN and e.key == K_r:
             game_over = False
             car.rect.x = 250
